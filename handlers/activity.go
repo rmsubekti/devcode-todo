@@ -19,7 +19,7 @@ var Activities = func(c *fiber.Ctx) error {
 	if err := activities.List(); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
 			Status:  "Failed",
-			Message: "Data empty",
+			Message: "List are empty",
 		})
 	}
 	return c.JSON(&Response{
@@ -34,7 +34,7 @@ var CreateActivity = func(c *fiber.Ctx) error {
 	if err := c.BodyParser(&activity); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
 			Status:  "Failed",
-			Message: "Data empty",
+			Message: "no activity created",
 		})
 	}
 
@@ -74,7 +74,7 @@ var UpdateActivity = func(c *fiber.Ctx) error {
 	if err := c.BodyParser(&activity); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
 			Status:  "Failed",
-			Message: "Data empty",
+			Message: "no activity updated",
 		})
 	}
 

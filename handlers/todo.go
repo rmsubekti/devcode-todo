@@ -46,7 +46,7 @@ var CreateTodo = func(c *fiber.Ctx) error {
 	if err := c.BodyParser(&todo); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
 			Status:  "Failed",
-			Message: "Data empty",
+			Message: "no todo created",
 		})
 	}
 
@@ -86,7 +86,7 @@ var UpdateTodo = func(c *fiber.Ctx) error {
 	if err := c.BodyParser(&todo); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
 			Status:  "Failed",
-			Message: "Data empty",
+			Message: "no todo updated",
 		})
 	}
 
