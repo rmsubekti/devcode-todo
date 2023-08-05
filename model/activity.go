@@ -7,13 +7,13 @@ import (
 )
 
 type Activity struct {
-	ID         uint       `gorm:"primaryKey" json:"id" `
-	Title      string     `gorm:"type:varchar(150)" json:"title" `
-	Email      string     `gorm:"type:varchar(150)" json:"email" `
-	CreatedAt  *time.Time `json:"created_at" time_format:"sql_date"`
-	UpdateddAt *time.Time `json:"updated_at" time_format:"sql_date"`
-	DeletedAt  *time.Time `json:"deleted_at" time_format:"sql_date"`
-	Todos      Todos      `gorm:"foreignkey:ActivityGroupId" json:"-" `
+	ID        uint      `gorm:"primaryKey" json:"id" `
+	Title     string    `gorm:"type:varchar(150)" json:"title" `
+	Email     string    `gorm:"type:varchar(150)" json:"email" `
+	CreatedAt time.Time `json:"created_at" time_format:"sql_date"`
+	UpdatedAt time.Time `json:"updated_at" time_format:"sql_date"`
+	DeletedAt time.Time `json:"deleted_at" time_format:"sql_date"`
+	Todos     Todos     `gorm:"foreignkey:ActivityGroupId" json:"-" `
 }
 
 type Activities []Activity
@@ -42,21 +42,24 @@ func (a *Activity) Create() error {
 }
 
 func (a *Activity) Update(id int) error {
-
-	if !a.IsExist(id) {
-		return fmt.Errorf("Activity with ID %d Not Found", id)
-	}
 	if a.IsEmpty() {
 		return fmt.Errorf("no activity updated")
 	}
-	return db.Model(&Activity{ID: uint(id)}).Updates(&a).Error
+	temp := &Activity{}
+	*temp = *a
+
+	if err := a.Get(id); err != nil {
+		return fmt.Errorf("Activity with ID %d Not Found", id)
+	}
+	temp.UpdatedAt = time.Now()
+	return db.Model(&a).Updates(&temp).Error
 }
 
 func (a *Activity) Delete(id int) error {
 	if !a.IsExist(id) {
 		return fmt.Errorf("Activity with ID %d Not Found", id)
 	}
-	if err := db.Delete(&Todo{}, "ActivityGroupId=?", id).Error; err != nil {
+	if err := db.Delete(&Todo{}, "activity_group=?", id).Error; err != nil {
 		return err
 	}
 	return db.Delete(&a, "id=?", id).Error

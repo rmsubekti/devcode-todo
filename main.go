@@ -26,7 +26,7 @@ func main() {
 		activity.Post("", handler.CreateActivity)
 		activity.Get("/:id", handler.Activity)
 		activity.Delete("/:id", handler.DeleteActivity)
-		activity.Patch("/:id", handler.DeleteActivity)
+		activity.Patch("/:id", handler.UpdateActivity)
 	}
 
 	todo := app.Group("/todo-items")

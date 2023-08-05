@@ -7,14 +7,14 @@ import (
 )
 
 type Todo struct {
-	ID              uint       `gorm:"primaryKey" json:"id"`
-	Title           string     `gorm:"" json:"title"`
-	IsActive        bool       `gorm:"default:false" json:"is_active"`
-	Priority        string     `gorm:"" json:"priority"`
-	CreatedAt       *time.Time `time_format:"sql_date" json:"created_at"`
-	UpdateddAt      *time.Time `time_format:"sql_date" json:"updated_at"`
-	DeletedAt       *time.Time `time_format:"sql_date" json:"deleted_at"`
-	ActivityGroupId uint       `json:"activity_group_id"`
+	ID              uint      `gorm:"primaryKey" json:"id"`
+	Title           string    `gorm:"" json:"title"`
+	IsActive        bool      `gorm:"default:false" json:"is_active"`
+	Priority        string    `gorm:"" json:"priority"`
+	CreatedAt       time.Time `time_format:"sql_date" json:"created_at"`
+	UpdatedAt       time.Time `time_format:"sql_date" json:"updated_at"`
+	DeletedAt       time.Time `time_format:"sql_date" json:"deleted_at"`
+	ActivityGroupId uint      `json:"activity_group_id"`
 }
 
 type Todos []Todo
@@ -46,14 +46,17 @@ func (t *Todo) Create() error {
 }
 
 func (t *Todo) Update(id int) error {
-
-	if !t.IsExist(id) {
-		return fmt.Errorf("Todo with id %d is not found", id)
-	}
 	if t.IsEmpty() {
 		return fmt.Errorf("no todo updated")
 	}
-	return db.Model(&Todo{ID: uint(id)}).Updates(&t).Error
+	temp := &Todo{}
+	*temp = *t
+
+	if err := t.Get(id); err != nil {
+		return fmt.Errorf("Todo with id %d is not found", id)
+	}
+	temp.UpdatedAt = time.Now()
+	return db.Model(&t).Updates(&temp).Error
 }
 
 func (t *Todo) Delete(id int) error {
