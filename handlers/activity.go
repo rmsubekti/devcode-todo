@@ -40,7 +40,7 @@ var CreateActivity = func(c *fiber.Ctx) error {
 
 	if err := activity.Create(); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
-			Status:  "Failed",
+			Status:  "Bad Request",
 			Message: err.Error(),
 		})
 	}
