@@ -57,7 +57,7 @@ var CreateTodo = func(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(&Response{
+	return c.Status(fiber.StatusCreated).JSON(&Response{
 		Status:  "Success",
 		Message: "Success",
 		Data:    todo,
@@ -68,7 +68,7 @@ var Todo = func(c *fiber.Ctx) error {
 	var todo model.Todo
 	id, _ := strconv.Atoi(c.Params("id"))
 	if err := todo.Get(id); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(&Response{
+		return c.Status(fiber.StatusNotFound).JSON(&Response{
 			Status:  "Not Found",
 			Message: err.Error(),
 		})
@@ -92,7 +92,7 @@ var UpdateTodo = func(c *fiber.Ctx) error {
 
 	id, _ := strconv.Atoi(c.Params("id"))
 	if err := todo.Update(id); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(&Response{
+		return c.Status(fiber.StatusNotFound).JSON(&Response{
 			Status:  "Not Found",
 			Message: err.Error(),
 		})
@@ -108,7 +108,7 @@ var DeleteTodo = func(c *fiber.Ctx) error {
 	var todo model.Todo
 	id, _ := strconv.Atoi(c.Params("id"))
 	if err := todo.Delete(id); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(&Response{
+		return c.Status(fiber.StatusNotFound).JSON(&Response{
 			Status:  "Not Found",
 			Message: err.Error(),
 		})

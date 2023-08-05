@@ -45,7 +45,7 @@ var CreateActivity = func(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(&Response{
+	return c.Status(fiber.StatusCreated).JSON(&Response{
 		Status:  "Success",
 		Message: "Success",
 		Data:    activity,
@@ -80,7 +80,7 @@ var UpdateActivity = func(c *fiber.Ctx) error {
 
 	id, _ := strconv.Atoi(c.Params("id"))
 	if err := activity.Update(id); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(&Response{
+		return c.Status(fiber.StatusNotFound).JSON(&Response{
 			Status:  "Not Found",
 			Message: err.Error(),
 		})
@@ -96,7 +96,7 @@ var DeleteActivity = func(c *fiber.Ctx) error {
 	var activity model.Activity
 	id, _ := strconv.Atoi(c.Params("id"))
 	if err := activity.Delete(id); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(&Response{
+		return c.Status(fiber.StatusNotFound).JSON(&Response{
 			Status:  "Not Found",
 			Message: err.Error(),
 		})

@@ -36,6 +36,11 @@ func (a *Activity) Create() error {
 	if a.IsEmpty() {
 		return fmt.Errorf("no activity created")
 	}
+
+	if len(a.Title) < 1 {
+		return fmt.Errorf("Activity title is required")
+	}
+
 	return db.Create(&a).Error
 }
 
