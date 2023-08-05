@@ -43,7 +43,7 @@ var Todos = func(c *fiber.Ctx) error {
 
 var CreateTodo = func(c *fiber.Ctx) error {
 	var todo model.Todo
-	if err := c.BodyParser(&todo); err != nil || todo.ActivityGroupId < 1 {
+	if err := c.BodyParser(&todo); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
 			Status:  "Bad Request",
 			Message: "no todo created",
@@ -52,7 +52,7 @@ var CreateTodo = func(c *fiber.Ctx) error {
 
 	if err := todo.Create(); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
-			Status:  "Failed",
+			Status:  "Bad Request",
 			Message: err.Error(),
 		})
 	}
@@ -117,7 +117,6 @@ var DeleteTodo = func(c *fiber.Ctx) error {
 	return c.JSON(&Response{
 		Status:    "Success",
 		Message:   "Success",
-		Data:      todo,
 		DeletedId: &id,
 	})
 }

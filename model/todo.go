@@ -33,7 +33,10 @@ func (t *Todos) ListByActivity(id int) error {
 }
 
 func (t *Todo) Get(id int) error {
-	return db.First(&t, "id=?", id).Error
+	if err := db.First(&t, "id=?", id).Error; err != nil {
+		return fmt.Errorf("Todo with ID %d Not Found", id)
+	}
+	return nil
 }
 
 func (t *Todo) Create() error {
@@ -41,10 +44,10 @@ func (t *Todo) Create() error {
 		return fmt.Errorf("no todo created")
 	}
 	if len(t.Title) < 1 {
-		return fmt.Errorf("Todo title is required")
+		return fmt.Errorf("title cannot be null")
 	}
 	if t.ActivityGroupId < 1 {
-		return fmt.Errorf("ActivityGroupId is required")
+		return fmt.Errorf("activity_group_id cannot be null")
 	}
 
 	return db.Create(&t).Error
@@ -58,14 +61,14 @@ func (t *Todo) Update(id int) error {
 	*temp = *t
 
 	if err := t.Get(id); err != nil {
-		return fmt.Errorf("Todo with ID %d Not Found", id)
+		return err
 	}
 	return db.Model(&t).Updates(&temp).Error
 }
 
 func (t *Todo) Delete(id int) error {
 	if err := t.Get(id); err != nil {
-		return fmt.Errorf("Todo with ID %d Not Found", id)
+		return err
 	}
 	return db.Delete(&t, "id=?", id).Error
 }

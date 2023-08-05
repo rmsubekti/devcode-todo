@@ -29,7 +29,10 @@ func (a *Activities) List() error {
 }
 
 func (a *Activity) Get(id int) error {
-	return db.First(&a, "id=?", id).Error
+	if err := db.First(&a, "id=?", id).Error; err != nil {
+		return fmt.Errorf("Activity with ID %d Not Found", id)
+	}
+	return nil
 }
 
 func (a *Activity) Create() error {
@@ -52,14 +55,14 @@ func (a *Activity) Update(id int) error {
 	*temp = *a
 
 	if err := a.Get(id); err != nil {
-		return fmt.Errorf("Activity with ID %d Not Found", id)
+		return err
 	}
 	return db.Model(&a).Updates(&temp).Error
 }
 
 func (a *Activity) Delete(id int) error {
 	if err := a.Get(id); err != nil {
-		return fmt.Errorf("Activity with ID %d Not Found", id)
+		return err
 	}
 
 	if err := db.Delete(&Todo{}, "activity_group_id=?", id).Error; err != nil {
