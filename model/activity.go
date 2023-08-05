@@ -62,7 +62,7 @@ func (a *Activity) Delete(id int) error {
 		return fmt.Errorf("Activity with ID %d Not Found", id)
 	}
 
-	if err := db.Delete(&Todo{}, "activity_group=?", id).Error; err != nil {
+	if err := db.Delete(&Todo{}, "activity_group_id=?", id).Error; err != nil {
 		return err
 	}
 	return db.Delete(&a, "id=?", id).Error

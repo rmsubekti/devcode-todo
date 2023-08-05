@@ -11,7 +11,7 @@ import (
 type Todo struct {
 	ID              uint           `gorm:"primaryKey" json:"id"`
 	Title           string         `gorm:"" json:"title"`
-	IsActive        bool           `gorm:"default:false" json:"is_active"`
+	IsActive        bool           `gorm:"default:true" json:"is_active"`
 	Priority        string         `gorm:"default:'very-high'" json:"priority"`
 	CreatedAt       *time.Time     `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt       *time.Time     `gorm:"autoUpdateTime" json:"updated_at"`
@@ -58,14 +58,14 @@ func (t *Todo) Update(id int) error {
 	*temp = *t
 
 	if err := t.Get(id); err != nil {
-		return fmt.Errorf("Todo with id %d is not found", id)
+		return fmt.Errorf("Todo with ID %d Not Found", id)
 	}
 	return db.Model(&t).Updates(&temp).Error
 }
 
 func (t *Todo) Delete(id int) error {
 	if err := t.Get(id); err != nil {
-		return fmt.Errorf("Todo with id %d is not found", id)
+		return fmt.Errorf("Todo with ID %d Not Found", id)
 	}
 	return db.Delete(&t, "id=?", id).Error
 }

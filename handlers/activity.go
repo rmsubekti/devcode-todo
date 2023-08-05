@@ -33,7 +33,7 @@ var CreateActivity = func(c *fiber.Ctx) error {
 	var activity model.Activity
 	if err := c.BodyParser(&activity); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
-			Status:  "Failed",
+			Status:  "Bad Request",
 			Message: "no activity created",
 		})
 	}
@@ -56,7 +56,7 @@ var Activity = func(c *fiber.Ctx) error {
 	var activity model.Activity
 	id, _ := strconv.Atoi(c.Params("id"))
 	if err := activity.Get(id); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(&Response{
+		return c.Status(fiber.StatusNotFound).JSON(&Response{
 			Status:  "Not Found",
 			Message: err.Error(),
 		})
@@ -73,7 +73,7 @@ var UpdateActivity = func(c *fiber.Ctx) error {
 	var activity model.Activity
 	if err := c.BodyParser(&activity); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
-			Status:  "Failed",
+			Status:  "Bad Request",
 			Message: "no activity updated",
 		})
 	}
