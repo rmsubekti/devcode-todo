@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"reflect"
 	"time"
 
 	"gorm.io/gorm"
@@ -11,7 +10,7 @@ import (
 type Todo struct {
 	ID              uint           `gorm:"primaryKey" json:"id"`
 	Title           string         `gorm:"" json:"title"`
-	IsActive        bool           `gorm:"default:true" json:"is_active"`
+	IsActive        *bool          `gorm:"default:true" json:"is_active"`
 	Priority        string         `gorm:"default:'very-high'" json:"priority"`
 	CreatedAt       *time.Time     `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt       *time.Time     `gorm:"autoUpdateTime" json:"updated_at"`
@@ -20,10 +19,6 @@ type Todo struct {
 }
 
 type Todos []Todo
-
-func (t *Todo) IsEmpty() bool {
-	return reflect.DeepEqual(&Todo{}, t)
-}
 
 func (t *Todos) List() error {
 	return db.Find(&t).Error
@@ -40,9 +35,6 @@ func (t *Todo) Get(id int) error {
 }
 
 func (t *Todo) Create() error {
-	if t.IsEmpty() {
-		return fmt.Errorf("no todo created")
-	}
 	if len(t.Title) < 1 {
 		return fmt.Errorf("title cannot be null")
 	}
@@ -54,9 +46,6 @@ func (t *Todo) Create() error {
 }
 
 func (t *Todo) Update(id int) error {
-	if t.IsEmpty() {
-		return fmt.Errorf("no todo updated")
-	}
 	temp := &Todo{}
 	*temp = *t
 

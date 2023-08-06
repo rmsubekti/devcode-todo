@@ -10,7 +10,7 @@ import (
 type Response struct {
 	Status    string `json:"status"`
 	Message   string `json:"message,omitempty"`
-	Data      any    `json:"data" default:"{}"`
+	Data      any    `json:"data"`
 	DeletedId *int   `json:"deletedId,omitempty"`
 }
 
@@ -105,7 +105,7 @@ var DeleteActivity = func(c *fiber.Ctx) error {
 	return c.JSON(&Response{
 		Status:    "Success",
 		Message:   "Success",
-		Data:      "{}",
+		Data:      map[string]interface{}{},
 		DeletedId: &id,
 	})
 }

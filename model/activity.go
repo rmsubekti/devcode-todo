@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"reflect"
 	"time"
 
 	"gorm.io/gorm"
@@ -20,10 +19,6 @@ type Activity struct {
 
 type Activities []Activity
 
-func (a *Activity) IsEmpty() bool {
-	return reflect.DeepEqual(&Activity{}, a)
-}
-
 func (a *Activities) List() error {
 	return db.Find(&a).Error
 }
@@ -39,18 +34,10 @@ func (a *Activity) Create() error {
 	if len(a.Title) < 1 {
 		return fmt.Errorf("title cannot be null")
 	}
-
-	if a.IsEmpty() {
-		return fmt.Errorf("no activity created")
-	}
-
 	return db.Create(&a).Error
 }
 
 func (a *Activity) Update(id int) error {
-	if a.IsEmpty() {
-		return fmt.Errorf("no activity updated")
-	}
 	temp := &Activity{}
 	*temp = *a
 

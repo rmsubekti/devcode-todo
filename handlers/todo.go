@@ -117,7 +117,7 @@ var DeleteTodo = func(c *fiber.Ctx) error {
 	return c.JSON(&Response{
 		Status:    "Success",
 		Message:   "Success",
-		Data:      "{}",
+		Data:      map[string]interface{}{},
 		DeletedId: &id,
 	})
 }
