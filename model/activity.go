@@ -36,12 +36,12 @@ func (a *Activity) Get(id int) error {
 }
 
 func (a *Activity) Create() error {
-	if a.IsEmpty() {
-		return fmt.Errorf("no activity created")
+	if len(a.Title) < 1 {
+		return fmt.Errorf("title cannot be null")
 	}
 
-	if len(a.Title) < 1 {
-		return fmt.Errorf("Activity title is required")
+	if a.IsEmpty() {
+		return fmt.Errorf("no activity created")
 	}
 
 	return db.Create(&a).Error

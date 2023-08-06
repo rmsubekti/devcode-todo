@@ -10,7 +10,7 @@ import (
 type Response struct {
 	Status    string `json:"status"`
 	Message   string `json:"message,omitempty"`
-	Data      any    `json:"data"`
+	Data      any    `json:"data" default:"{}"`
 	DeletedId *int   `json:"deletedId,omitempty"`
 }
 
@@ -31,7 +31,7 @@ var Activities = func(c *fiber.Ctx) error {
 
 var CreateActivity = func(c *fiber.Ctx) error {
 	var activity model.Activity
-	if err := c.BodyParser(&activity); err != nil || len(activity.Title) < 1 {
+	if err := c.BodyParser(&activity); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&Response{
 			Status:  "Bad Request",
 			Message: "no activity created",
@@ -105,6 +105,7 @@ var DeleteActivity = func(c *fiber.Ctx) error {
 	return c.JSON(&Response{
 		Status:    "Success",
 		Message:   "Success",
+		Data:      "{}",
 		DeletedId: &id,
 	})
 }
